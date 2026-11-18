@@ -1,0 +1,21 @@
+# Air live-reload configuration for FastVPN GUI Go backend
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/fastvpn-gui main.go"
+bin = "./tmp/fastvpn-gui"
+delay = 800
+exclude_dir = ["frontend", "dist", "bin", "tmp", "docs"]
+include_ext = ["go"]
+exclude_regex = ["_test\\.go$"]
+
+[log]
+time = true
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+

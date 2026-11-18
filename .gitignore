@@ -1,0 +1,32 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test artifacts
+*.test
+*.out
+
+# Node & Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Wails
+build/bin/
+
+# Temporary & Editor
+tmp/
+*.tmp
+.DS_Store
+.idea/
+.vscode/
+
+# Scripts
+scripts/update-version.sh
+
+# Docs
+docs/
