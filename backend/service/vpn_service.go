@@ -379,6 +379,37 @@ func (s *VpnService) CheckPrivileges() bool {
 	return ok
 }
 
+func (s *VpnService) GetPrivilegeSetupCommand() string {
+	var candidates []string
+	if exe, err := os.Executable(); err == nil {
+		exeDir := filepath.Dir(exe)
+		candidates = append(candidates,
+			filepath.Join(exeDir, "scripts", "setup-privileges.sh"),
+			filepath.Join(exeDir, "..", "scripts", "setup-privileges.sh"),
+		)
+	}
+	if home, err := os.UserHomeDir(); err == nil {
+		candidates = append(candidates,
+			filepath.Join(home, ".local", "share", "fastvpn-gui", "scripts", "setup-privileges.sh"),
+		)
+	}
+	candidates = append(candidates,
+		"/opt/fastvpn-gui/scripts/setup-privileges.sh",
+		"./scripts/setup-privileges.sh",
+	)
+
+	for _, cand := range candidates {
+		if fi, err := os.Stat(cand); err == nil && !fi.IsDir() {
+			if abs, err := filepath.Abs(cand); err == nil {
+				return fmt.Sprintf("sudo bash %s", abs)
+			}
+			return fmt.Sprintf("sudo bash %s", cand)
+		}
+	}
+
+	return "sudo bash scripts/setup-privileges.sh"
+}
+
 func (s *VpnService) RequestPrivilegeSetup() (bool, error) {
 	log.Printf("[FastVPN Privilege] ========================================")
 	log.Printf("[FastVPN Privilege] RequestPrivilegeSetup() invoked")

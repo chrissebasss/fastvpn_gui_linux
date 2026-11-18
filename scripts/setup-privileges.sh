@@ -25,6 +25,15 @@ KILLALL_BIN=$(type -P killall || which killall 2>/dev/null || echo "/usr/bin/kil
 [[ "$KILL_BIN" != /* ]] && KILL_BIN="/usr/bin/kill"
 [[ "$KILLALL_BIN" != /* ]] && KILLALL_BIN="/usr/bin/killall"
 
+if [ ! -f "$OPENVPN_BIN" ] && ! command -v openvpn >/dev/null 2>&1; then
+  echo "==> Warning: 'openvpn' binary was not found at standard paths ($OPENVPN_BIN)."
+  echo "    Please install OpenVPN via your package manager:"
+  echo "      Ubuntu/Debian/Mint:  sudo apt install -y openvpn"
+  echo "      Fedora/RHEL:         sudo dnf install -y openvpn"
+  echo "      Arch/CachyOS:        sudo pacman -S openvpn"
+  echo ""
+fi
+
 echo "==> Configuring OpenVPN permissions for user: $CURRENT_USER"
 echo "==> OpenVPN binary: $OPENVPN_BIN"
 

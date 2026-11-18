@@ -48,6 +48,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [isUpdatingLists, setIsUpdatingLists] = React.useState(false);
   const [updateFeedback, setUpdateFeedback] = React.useState<"idle" | "success" | "error">("idle");
   const [copiedCmd, setCopiedCmd] = React.useState(false);
+  const [setupCmd, setSetupCmd] = React.useState("sudo bash scripts/setup-privileges.sh");
   const [grantFeedback, setGrantFeedback] = React.useState<{ status: "idle" | "success" | "error"; msg: string }>({
     status: "idle",
     msg: "",
@@ -57,6 +58,11 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setUsername(initialUsername);
     setPassword(initialPassword);
     setGrantFeedback({ status: "idle", msg: "" });
+    if (isOpen) {
+      api.getPrivilegeSetupCommand().then((cmd) => {
+        if (cmd) setSetupCmd(cmd);
+      });
+    }
   }, [initialUsername, initialPassword, isOpen]);
 
   const handleSave = async (e: React.FormEvent) => {
@@ -69,8 +75,6 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
       setIsSaving(false);
     }
   };
-
-  const setupCmd = "sudo bash scripts/setup-privileges.sh";
 
   const handleCopyCmd = () => {
     navigator.clipboard.writeText(setupCmd);
@@ -333,6 +337,16 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
               >
                 {copiedCmd ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
               </Button>
+            </div>
+
+            {/* Transparency Note: explain what the privilege script modifies */}
+            <div className="rounded-lg bg-[#080B12] p-2.5 border border-border/50 text-[11px] text-muted-foreground space-y-1">
+              <span className="font-semibold text-slate-300 block">Security &amp; Permissions Details:</span>
+              <ul className="list-disc list-inside space-y-0.5 text-slate-400">
+                <li>Installs Polkit rule to <code className="text-slate-300 font-mono">/etc/polkit-1/rules.d/50-fastvpn-openvpn.rules</code></li>
+                <li>Installs Sudoers rule to <code className="text-slate-300 font-mono">/etc/sudoers.d/fastvpn-openvpn</code></li>
+                <li>Restricted strictly to <code className="text-slate-300 font-mono">openvpn</code> &amp; <code className="text-slate-300 font-mono">pkill -x openvpn</code> for your user account.</li>
+              </ul>
             </div>
           </div>
         </div>

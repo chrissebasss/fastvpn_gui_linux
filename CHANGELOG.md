@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-11-18
 
 ### Added
+- **Dynamic Privilege Setup Command**: Settings dialog dynamically computes and displays the user's exact absolute script path (`/home/user/.local/share/fastvpn-gui/scripts/setup-privileges.sh`) with a 1-click copy button and detailed security breakdown of Polkit and sudoers rules.
+- **Universal Multi-Distro Support**: Enhanced `install.sh` and `setup-privileges.sh` with distro detection (`/etc/os-release`) and tailored package installation instructions for Arch Linux, Ubuntu, Debian, Linux Mint, Fedora, and openSUSE.
+- **Bundled Helper Scripts**: `install.sh` now bundles `setup-privileges.sh` and `uninstall.sh` into `$INSTALL_DIR/scripts/` for self-contained execution.
+- **Cross-Protocol Favorites Sync**: Favoriting a server location in UDP automatically syncs to TCP and vice-versa.
+- **Comprehensive Documentation**: Overhauled `README.md` with modern GitHub badges, supported distributions matrix, package commands, architecture diagrams, and security privilege guide.
 - **New Official Brand Logo**: Updated application branding across the desktop client with the new shield and WiFi logo (`logo.png`).
 - **High-Resolution Icon Packaging**: Generated 512x512 squircle icons with smooth antialiased corners for Linux desktop environments (KDE Plasma, GNOME), system tray, and webview favicon.
-- **Sidebar Brand Integration**: Displayed official app icon in the sidebar header alongside app version and status badge.
 - **Dynamic Server List Downloader**: Replaced static bundled server profiles with dynamic 1-click downloading of official server lists directly from `https://vpn.ncapi.io/groupedServerList.zip`.
 - **Dual Protocol Support (UDP & TCP)**: Added protocol switcher `[ UDP | TCP ]` in the sidebar header with instant profile list reloading (150+ locations for each protocol).
 - **First-Launch Onboarding Modal**: Automatically guides users to download official server lists or configure local disk directories on initial setup.
@@ -19,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Custom Local Server Directories**: Support for custom user-selected paths for UDP and TCP OpenVPN configuration folders.
 
 ### Fixed
+- **Missing Country Flags & ISO Fallback**: Added missing ISO codes (HT, IM, JE, JO, KY, LB, MM, MO, NI, PG, PR, SA, TT, etc.) and city fallback so profiles never display "Unknown".
+- **Modal Overflow on Small Displays**: Added responsive max-height constraints (`max-h-[88vh]`) with pinned headers/footers and smooth internal scrolling in Settings and Server Profile Modals.
+- **Scanner Error Handling**: Added `scanner.Err()` checks in OpenVPN log streaming and parser loops.
 - **Public IP Parsing**: Fixed raw JSON string display (`{"ip": "...","type": "IPv4"}`) from `wmip.dev` API by implementing structured JSON decoding and IPv4 regex validation in both Go backend and React frontend fallback.
 - **Connection Hang & Mutex Deadlock**: Fixed non-reentrant mutex deadlock in `ProcessManager.Disconnect()` and `StartConnection()`, allowing connections to launch immediately.
 - **OpenVPN Password Prompt Freeze**: Removed `--management-query-passwords` so OpenVPN uses `--auth-user-pass` without waiting indefinitely on the TCP management socket.

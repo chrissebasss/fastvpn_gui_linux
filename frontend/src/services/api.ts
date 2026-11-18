@@ -79,6 +79,16 @@ export const api = {
     return await callBackend<boolean>("RequestPrivilegeSetup");
   },
 
+  async getPrivilegeSetupCommand(): Promise<string> {
+    try {
+      const cmd = await callBackend<string>("GetPrivilegeSetupCommand");
+      if (cmd && typeof cmd === "string") return cmd;
+    } catch (e) {
+      console.warn("Could not retrieve setup command from backend:", e);
+    }
+    return "sudo bash scripts/setup-privileges.sh";
+  },
+
   async openDevTools(): Promise<void> {
     try {
       console.log("[FastVPN Frontend] Invoking Window.OpenDevTools()...");
