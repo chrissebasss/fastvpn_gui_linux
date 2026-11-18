@@ -2,6 +2,7 @@ package ovpn
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -293,6 +294,10 @@ func (pm *ProcessManager) StartConnection(profile VpnProfile, endpoint *string, 
 				}
 			}
 		}
+
+		if err := scanner.Err(); err != nil && !errors.Is(err, io.EOF) && !errors.Is(err, os.ErrClosed) {
+			pm.AddLog(fmt.Sprintf("[ERROR] stdout scanner: %v", err))
+		}
 	}()
 
 	// Spawn stderr listener
@@ -300,6 +305,9 @@ func (pm *ProcessManager) StartConnection(profile VpnProfile, endpoint *string, 
 		scanner := bufio.NewScanner(stderr)
 		for scanner.Scan() {
 			pm.AddLog("[STDERR] " + scanner.Text())
+		}
+		if err := scanner.Err(); err != nil && !errors.Is(err, io.EOF) && !errors.Is(err, os.ErrClosed) {
+			pm.AddLog(fmt.Sprintf("[ERROR] stderr scanner: %v", err))
 		}
 	}()
 

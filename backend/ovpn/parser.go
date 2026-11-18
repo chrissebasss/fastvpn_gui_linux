@@ -198,6 +198,9 @@ func ParseProfileFromContent(filename, content, fullPath string) (*VpnProfile, e
 			}
 		}
 	}
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("failed scanning ovpn profile %q: %w", filename, err)
+	}
 
 	return &VpnProfile{
 		ID:          id,
