@@ -35,10 +35,8 @@ fastvpn_gui_linux/
 │   ├── install.sh          # Full system-wide or user-level installer
 │   ├── uninstall.sh        # Clean uninstaller with optional --purge flag
 │   ├── setup-privileges.sh # Polkit and sudoers rule installer
-│   ├── package-release.sh  # Multi-distro release packager (.deb, .tar.gz, Arch PKGBUILD, gh release)
 │   ├── update-version.sh   # SemVer updater across Go, React, and CHANGELOG
-│   ├── dev.sh              # Live hot-reloading dev runner (Air + Vite)
-│   └── copy-to-shared.sh   # Mirror synchronization script
+│   └── dev.sh              # Live hot-reloading dev runner (Air + Vite)
 ├── main.go                 # Wails v3 application entry point, services, tray & window
 ├── CHANGELOG.md            # Semantic version history (Keep a Changelog)
 ├── README.md               # User documentation

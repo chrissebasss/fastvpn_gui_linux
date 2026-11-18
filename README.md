@@ -188,29 +188,17 @@ The resulting single binary in `bin/fastvpn-gui` has all frontend assets embedde
 
 ---
 
-## 📦 Multi-Distro Packaging & Release
+## 📦 Pre-Built Packages & Distribution
 
-To compile and package FastVPN for distribution across multiple Linux formats:
+FastVPN provides pre-compiled packages for major Linux distributions on [GitHub Releases](https://github.com/chrissebasss/fastvpn_gui_linux/releases):
 
-```bash
-bash scripts/package-release.sh
-```
-
-This single command generates in `dist/`:
-- **`fastvpn-gui-<version>-linux-x86_64.tar.gz`**: Universal portable release bundle with binary, desktop entry, high-res icon, and automated installer.
-- **`fastvpn-gui_<version>_amd64.deb`**: Standard Debian/Ubuntu package with dependency declarations (`openvpn`, `libwebkit2gtk-4.1-0`, `policykit-1`). Install with:
+- **Universal Release Bundle (`.tar.gz`)**: `fastvpn-gui-<version>-linux-x86_64.tar.gz` containing the stripped binary, icons, desktop launcher, and automated installer. Works on any Linux distribution.
+- **Debian / Ubuntu Package (`.deb`)**: `fastvpn-gui_<version>_amd64.deb` for Ubuntu, Debian, Linux Mint, and Pop!_OS. Auto-installs runtime dependencies (`openvpn`, `libwebkit2gtk-4.1-0`, `policykit-1`):
   ```bash
-  sudo apt install ./dist/fastvpn-gui_*_amd64.deb
+  sudo apt install ./fastvpn-gui_*_amd64.deb
   ```
-- **`PKGBUILD`**: Arch Linux PKGBUILD with calculated SHA256 sums, ready for `makepkg -si` or AUR publishing.
-- **`sha256sums.txt`**: Cryptographic verification checksums for all release assets.
-- **`release-notes.md`**: Automatically extracted changelog notes for this version.
-
-### Publishing to GitHub Releases
-If the GitHub CLI (`gh`) is authenticated, publish the release directly:
-```bash
-bash scripts/package-release.sh --publish
-```
+- **Arch Linux `PKGBUILD`**: AUR-compatible recipe with SHA256 checksums ready for `makepkg -si`.
+- **`sha256sums.txt`**: Cryptographic verification checksums for every release artifact.
 
 ---
 
@@ -283,8 +271,7 @@ fastvpn_gui_linux/
 │   ├── uninstall.sh          # Clean uninstaller (with optional --purge)
 │   ├── setup-privileges.sh   # Polkit and Sudoers permission configuration
 │   ├── dev.sh                # Dual-stack live development runner (Vite + Air)
-│   ├── update-version.sh     # SemVer synchronizer across Go, React, and CHANGELOG
-│   └── copy-to-shared.sh     # Mirror synchronization script
+│   └── update-version.sh     # SemVer synchronizer across Go, React, and CHANGELOG
 ├── build/                    # Branding assets & application icon (512x512)
 ├── main.go                   # Wails v3 desktop application entry point & system tray
 ├── CHANGELOG.md              # Semantic version history (Keep a Changelog)

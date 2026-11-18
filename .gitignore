@@ -26,8 +26,10 @@ tmp/
 .idea/
 .vscode/
 
-# Scripts
+# Scripts (local maintainer utilities)
 scripts/update-version.sh
+scripts/copy-to-shared.sh
+scripts/package-release.sh
 
 # Docs
 docs/
