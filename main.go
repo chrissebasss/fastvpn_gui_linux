@@ -41,6 +41,7 @@ func main() {
 	}
 
 	vpnService := service.NewVpnService()
+	vpnService.SetAppVersion(Version)
 	appService := &VpnAppService{VpnService: vpnService}
 
 	log.Println("[FastVPN] ==================================================")

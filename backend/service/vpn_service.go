@@ -28,6 +28,7 @@ type VpnService struct {
 	profiles   []ovpn.VpnProfile
 	profileMap map[string]ovpn.VpnProfile
 	emitFunc   func(event string, data interface{})
+	appVersion string
 }
 
 func NewVpnService() *VpnService {
@@ -37,6 +38,7 @@ func NewVpnService() *VpnService {
 	svc := &VpnService{
 		pm:         pm,
 		profileMap: make(map[string]ovpn.VpnProfile),
+		appVersion: "1.1.0",
 	}
 
 	_ = svc.reloadProfilesLocked(cfg)
@@ -677,4 +679,26 @@ func (s *VpnService) GetPublicIP() (string, error) {
 	}
 
 	return "", errors.New("failed to determine public IP from upstream providers")
+}
+
+func (s *VpnService) SetAppVersion(version string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.appVersion = version
+}
+
+func (s *VpnService) CheckForUpdates() (*UpdateInfo, error) {
+	s.mu.RLock()
+	ver := s.appVersion
+	s.mu.RUnlock()
+
+	return CheckGitHubUpdate("chrissebasss", "fastvpn_gui_linux", ver, false)
+}
+
+func (s *VpnService) ForceCheckForUpdates() (*UpdateInfo, error) {
+	s.mu.RLock()
+	ver := s.appVersion
+	s.mu.RUnlock()
+
+	return CheckGitHubUpdate("chrissebasss", "fastvpn_gui_linux", ver, true)
 }
