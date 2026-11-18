@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-11-18
 
 ### Added
+- **In-App GitHub Update Notifications**: Background update checking against GitHub Releases with a non-intrusive badge in the sidebar header, dedicated changelog modal rendering formatted release notes, and a manual "Check for Updates" control in Settings.
+- **Multi-Distro Packaging Tool (`scripts/package-release.sh`)**: Standalone script that builds universal `.tar.gz`, Debian `.deb` (via POSIX `ar`/`tar`), Arch Linux `PKGBUILD`, SHA256 checksums, and automates GitHub Release creation via `gh release create`.
 - **Dynamic Privilege Setup Command**: Settings dialog dynamically computes and displays the user's exact absolute script path (`/home/user/.local/share/fastvpn-gui/scripts/setup-privileges.sh`) with a 1-click copy button and detailed security breakdown of Polkit and sudoers rules.
 - **Universal Multi-Distro Support**: Enhanced `install.sh` and `setup-privileges.sh` with distro detection (`/etc/os-release`) and tailored package installation instructions for Arch Linux, Ubuntu, Debian, Linux Mint, Fedora, and openSUSE.
 - **Bundled Helper Scripts**: `install.sh` now bundles `setup-privileges.sh` and `uninstall.sh` into `$INSTALL_DIR/scripts/` for self-contained execution.

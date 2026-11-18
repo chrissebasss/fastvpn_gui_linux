@@ -49,6 +49,10 @@ Whether you run **Arch Linux / CachyOS**, **Ubuntu / Debian / Linux Mint**, or *
 - **Dynamic Server Profile Bundle (UDP & TCP)**:
   - 1-click download of 150+ worldwide locations directly from FastVPN's official bundle endpoint (`~/.config/fastvpn-gui/profiles`).
   - Full support for custom user-provided OpenVPN directories.
+- **In-App GitHub Update Notifications & Changelog**:
+  - Automatically checks GitHub Releases for new updates with a non-intrusive badge in the sidebar.
+  - Dedicated update dialog displays formatted release notes, version comparisons, and direct download links.
+  - Manual "Check for Updates" button in Settings.
 - **Built-in DevTools & MCP Server**:
   - Press <kbd>F12</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> to launch WebKit DevTools.
   - Native Model Context Protocol server (`wails3 mcp`) for AI pair programming.
@@ -180,6 +184,32 @@ go build -ldflags="-s -w" -o bin/fastvpn-gui main.go
 The resulting single binary in `bin/fastvpn-gui` has all frontend assets embedded and can be launched immediately:
 ```bash
 ./bin/fastvpn-gui
+```
+
+---
+
+## 📦 Multi-Distro Packaging & Release
+
+To compile and package FastVPN for distribution across multiple Linux formats:
+
+```bash
+bash scripts/package-release.sh
+```
+
+This single command generates in `dist/`:
+- **`fastvpn-gui-<version>-linux-x86_64.tar.gz`**: Universal portable release bundle with binary, desktop entry, high-res icon, and automated installer.
+- **`fastvpn-gui_<version>_amd64.deb`**: Standard Debian/Ubuntu package with dependency declarations (`openvpn`, `libwebkit2gtk-4.1-0`, `policykit-1`). Install with:
+  ```bash
+  sudo apt install ./dist/fastvpn-gui_*_amd64.deb
+  ```
+- **`PKGBUILD`**: Arch Linux PKGBUILD with calculated SHA256 sums, ready for `makepkg -si` or AUR publishing.
+- **`sha256sums.txt`**: Cryptographic verification checksums for all release assets.
+- **`release-notes.md`**: Automatically extracted changelog notes for this version.
+
+### Publishing to GitHub Releases
+If the GitHub CLI (`gh`) is authenticated, publish the release directly:
+```bash
+bash scripts/package-release.sh --publish
 ```
 
 ---
