@@ -93,16 +93,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             alt="FastVPN"
             className="w-9 h-9 rounded-lg shadow-sm border border-primary/20 shrink-0 object-contain"
           />
-          <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-bold text-base tracking-wide text-foreground">
-                Fast<span className="text-primary">VPN</span>
-              </span>
-              <span className="text-xs text-muted-foreground font-mono">v{APP_VERSION}</span>
-            </div>
-            <p className="text-xs text-muted-foreground leading-none mt-0.5">
-              High-Speed OpenVPN
-            </p>
+          <div className="flex items-center space-x-1.5">
+            <span className="font-bold text-base tracking-wide text-foreground">
+              Fast<span className="text-primary">VPN</span>
+            </span>
+            <span className="text-xs text-muted-foreground font-mono">v{APP_VERSION}</span>
           </div>
         </div>
 
