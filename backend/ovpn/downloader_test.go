@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/ovpn"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/ovpn"
 )
 
 func createTestZip(t *testing.T) []byte {
@@ -90,4 +90,3 @@ func TestCountProfilesEmptyDir(t *testing.T) {
 		t.Errorf("expected HasProfiles to be false for empty dir")
 	}
 }
-

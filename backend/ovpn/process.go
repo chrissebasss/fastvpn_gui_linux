@@ -16,7 +16,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/config"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/config"
 )
 
 type ConnectionStatus struct {
@@ -539,4 +539,3 @@ func isProcessRunning(name string) bool {
 
 // Ensure unused io import check
 var _ io.Reader = nil
-

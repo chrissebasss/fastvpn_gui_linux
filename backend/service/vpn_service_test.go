@@ -3,7 +3,7 @@ package service_test
 import (
 	"testing"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/service"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/service"
 )
 
 func TestServiceInitialization(t *testing.T) {
@@ -223,6 +223,3 @@ func TestFavoriteSyncAcrossProtocols(t *testing.T) {
 		}
 	}
 }
-
-
-

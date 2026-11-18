@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/ovpn"
-	"github.com/fastvpn/fastvpn-gui-linux/backend/service"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/ovpn"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/service"
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/wailsapp/wails/v3/pkg/events"
 )

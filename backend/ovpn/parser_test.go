@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/ovpn"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/ovpn"
 )
 
 func TestLoadProfiles(t *testing.T) {
@@ -66,5 +66,3 @@ ca ca.crt
 		t.Error("expected to find NCVPN-NO-Oslo-UDP profile")
 	}
 }
-
-

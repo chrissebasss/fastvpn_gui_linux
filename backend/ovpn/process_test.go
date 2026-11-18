@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/ovpn"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/ovpn"
 )
 
 func TestParseServerPrefixFromLine(t *testing.T) {
@@ -124,4 +124,3 @@ func TestDisconnectNoDeadlock(t *testing.T) {
 		t.Errorf("expected logs to be recorded")
 	}
 }
-

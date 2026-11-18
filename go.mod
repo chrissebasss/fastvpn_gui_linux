@@ -1,4 +1,4 @@
-module github.com/fastvpn/fastvpn-gui-linux
+module github.com/chrissebasss/fastvpn-gui-linux
 
 go 1.27.3
 

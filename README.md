@@ -114,7 +114,7 @@ sudo zypper install -y go nodejs npm patterns-devel-base-devel_basis libwebkit2g
 
 Clone this repository:
 ```bash
-git clone https://github.com/your-username/fastvpn_gui_linux.git
+git clone https://github.com/chrissebasss/fastvpn_gui_linux.git
 cd fastvpn_gui_linux
 ```
 

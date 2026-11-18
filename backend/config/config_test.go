@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/config"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/config"
 )
 
 func TestConfigPersistence(t *testing.T) {
@@ -84,4 +84,3 @@ func TestSessionPersistence(t *testing.T) {
 		t.Errorf("expected session file to be deleted")
 	}
 }
-

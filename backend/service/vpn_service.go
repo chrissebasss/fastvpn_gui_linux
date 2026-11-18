@@ -18,8 +18,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fastvpn/fastvpn-gui-linux/backend/config"
-	"github.com/fastvpn/fastvpn-gui-linux/backend/ovpn"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/config"
+	"github.com/chrissebasss/fastvpn-gui-linux/backend/ovpn"
 )
 
 type VpnService struct {

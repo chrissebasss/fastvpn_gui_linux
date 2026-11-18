@@ -10,7 +10,7 @@ async function callBackend<T = any>(methodName: string, ...args: any[]): Promise
   const candidates = [
     `main.VpnAppService.${methodName}`,
     `main.VpnService.${methodName}`,
-    `github.com/fastvpn/fastvpn-gui-linux/backend/service.VpnService.${methodName}`,
+    `github.com/chrissebasss/fastvpn-gui-linux/backend/service.VpnService.${methodName}`,
   ];
 
   let lastError: any = null;
