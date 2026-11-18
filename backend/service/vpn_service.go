@@ -290,24 +290,36 @@ func (s *VpnService) SaveCredentials(username, password string) error {
 	return config.SaveConfig(cfg)
 }
 
+func normalizeFavoriteKey(id string) string {
+	k := strings.TrimSuffix(id, "-UDP")
+	k = strings.TrimSuffix(k, "-TCP")
+	k = strings.TrimSuffix(k, "-udp")
+	k = strings.TrimSuffix(k, "-tcp")
+	return k
+}
+
 func (s *VpnService) ToggleFavorite(profileID string) ([]string, error) {
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		cfg = &config.AppConfig{Favorites: []string{}}
 	}
 
+	baseKey := normalizeFavoriteKey(profileID)
 	found := false
 	var updated []string
 	for _, fav := range cfg.Favorites {
-		if fav == profileID {
+		if normalizeFavoriteKey(fav) == baseKey {
 			found = true
 		} else {
 			updated = append(updated, fav)
 		}
 	}
+
 	if !found {
-		updated = append(updated, profileID)
+		// Add both UDP and TCP variants so any direct ID lookup matches across protocols
+		updated = append(updated, baseKey+"-UDP", baseKey+"-TCP")
 	}
+
 	cfg.Favorites = updated
 	if err := config.SaveConfig(cfg); err != nil {
 		return nil, err

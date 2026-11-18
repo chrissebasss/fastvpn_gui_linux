@@ -54,10 +54,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const favorites = React.useMemo(() => config?.favorites || [], [config]);
 
+  const isProfileFavorite = React.useCallback(
+    (profileId: string) => {
+      const base = profileId.replace(/-(UDP|TCP)$/i, "");
+      return favorites.some((f) => f === profileId || f.replace(/-(UDP|TCP)$/i, "") === base);
+    },
+    [favorites]
+  );
+
+  const favoriteCount = React.useMemo(() => {
+    return profiles.filter((p) => isProfileFavorite(p.id)).length;
+  }, [profiles, isProfileFavorite]);
+
   const filteredProfiles = React.useMemo(() => {
     return profiles
       .filter((p) => {
-        if (activeTab === "favorites" && !favorites.includes(p.id)) {
+        if (activeTab === "favorites" && !isProfileFavorite(p.id)) {
           return false;
         }
         if (!search.trim()) return true;
@@ -76,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (cityDiff !== 0) return cityDiff;
         return a.id.localeCompare(b.id, undefined, { sensitivity: "base" });
       });
-  }, [profiles, activeTab, favorites, search]);
+  }, [profiles, activeTab, isProfileFavorite, search]);
 
   const isConnected = status.status === "Connected";
   const isConnecting = status.status === "Connecting";
@@ -87,18 +99,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="flex flex-col w-[360px] min-w-[340px] max-w-[420px] h-screen bg-[#0C1018] border-r border-border select-text">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3.5 border-b border-border/80">
-        <div className="flex items-center space-x-3">
-          <img
-            src="/appicon.png"
-            alt="FastVPN"
-            className="w-9 h-9 rounded-lg shadow-sm border border-primary/20 shrink-0 object-contain"
-          />
-          <div className="flex items-center space-x-1.5">
-            <span className="font-bold text-base tracking-wide text-foreground">
-              Fast<span className="text-primary">VPN</span>
-            </span>
-            <span className="text-xs text-muted-foreground font-mono">v{APP_VERSION}</span>
-          </div>
+        <div className="flex items-center space-x-2">
+          <span className="font-bold text-base tracking-wide text-foreground">
+            Fast<span className="text-primary">VPN</span>
+          </span>
+          <span className="text-xs text-muted-foreground font-mono">v{APP_VERSION}</span>
         </div>
 
         {/* Global Status Badge */}
@@ -208,7 +213,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
           <span>Favorites</span>
-          <span className="text-xs text-muted-foreground">({favorites.length})</span>
+          <span className="text-xs text-muted-foreground">({favoriteCount})</span>
         </button>
       </div>
 
@@ -240,7 +245,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           filteredProfiles.map((profile) => {
             const isSelected = selectedProfileId === profile.id;
             const isCountryActive = isConnected && activeProfileId === profile.id;
-            const isFavorite = favorites.includes(profile.id);
+            const isFavorite = isProfileFavorite(profile.id);
 
             return (
               <div

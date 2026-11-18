@@ -179,5 +179,50 @@ func TestConnectFlow(t *testing.T) {
 	_ = svc.DisconnectVPN()
 }
 
+func TestFavoriteSyncAcrossProtocols(t *testing.T) {
+	svc := service.NewVpnService()
+	testKey := "TEST-LOC-ALPHA-TCP"
+	// Ensure test key is cleared first
+	_, _ = svc.ToggleFavorite(testKey)
+	cfg, _ := svc.GetConfig()
+	for _, f := range cfg.Favorites {
+		if f == "TEST-LOC-ALPHA-TCP" || f == "TEST-LOC-ALPHA-UDP" {
+			_, _ = svc.ToggleFavorite(testKey)
+			break
+		}
+	}
+
+	// Toggle TCP profile as favorite
+	favs, err := svc.ToggleFavorite("TEST-LOC-ALPHA-TCP")
+	if err != nil {
+		t.Fatalf("ToggleFavorite failed: %v", err)
+	}
+
+	hasUDP := false
+	hasTCP := false
+	for _, f := range favs {
+		if f == "TEST-LOC-ALPHA-UDP" {
+			hasUDP = true
+		}
+		if f == "TEST-LOC-ALPHA-TCP" {
+			hasTCP = true
+		}
+	}
+	if !hasUDP || !hasTCP {
+		t.Errorf("expected both UDP and TCP variants in favorites, got %v", favs)
+	}
+
+	// Toggle again using UDP variant - should remove both
+	favsAfter, err := svc.ToggleFavorite("TEST-LOC-ALPHA-UDP")
+	if err != nil {
+		t.Fatalf("ToggleFavorite second call failed: %v", err)
+	}
+	for _, f := range favsAfter {
+		if f == "TEST-LOC-ALPHA-UDP" || f == "TEST-LOC-ALPHA-TCP" {
+			t.Errorf("expected TEST-LOC-ALPHA to be removed, but found %s", f)
+		}
+	}
+}
+
 
 

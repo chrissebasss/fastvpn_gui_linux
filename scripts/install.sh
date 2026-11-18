@@ -92,6 +92,7 @@ Icon=fastvpn-gui
 Terminal=false
 Categories=Network;VPN;Utility;
 StartupNotify=true
+StartupWMClass=fastvpn-gui
 Keywords=vpn;openvpn;fastvpn;network;security;
 EOF
 
@@ -101,8 +102,14 @@ chmod 644 "$DESKTOP_FILE"
 if command -v update-desktop-database >/dev/null 2>&1; then
   update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
 fi
+HICOLOR_DIR="$(dirname "$(dirname "$ICON_DIR")")"
 if command -v gtk-update-icon-cache >/dev/null 2>&1; then
-  gtk-update-icon-cache -f -t "$(dirname "$ICON_DIR")" 2>/dev/null || true
+  gtk-update-icon-cache -f -t "$HICOLOR_DIR" 2>/dev/null || true
+fi
+if command -v kbuildsycoca6 >/dev/null 2>&1; then
+  kbuildsycoca6 --noincremental 2>/dev/null || true
+elif command -v kbuildsycoca5 >/dev/null 2>&1; then
+  kbuildsycoca5 --noincremental 2>/dev/null || true
 fi
 
 # 6. Configure privileges if running as root

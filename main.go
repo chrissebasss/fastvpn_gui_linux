@@ -55,8 +55,12 @@ func main() {
 	log.Println("[FastVPN] ==================================================")
 
 	app := application.New(application.Options{
-		Name:        "FastVPN",
-		Description: "FastVPN High-Speed OpenVPN Client",
+		Name:        "fastvpn-gui",
+		Description: "FastVPN OpenVPN Client",
+		Icon:        appIcon,
+		Linux: application.LinuxOptions{
+			ProgramName: "fastvpn-gui",
+		},
 		Services: []application.Service{
 			application.NewService(vpnService),
 			application.NewService(appService),

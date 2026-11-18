@@ -99,11 +99,11 @@ export const ServerListModal: React.FC<ServerListModalProps> = ({
     <Dialog open={isOpen} onOpenChange={(open) => (!open && !isInitialOnboarding ? onClose() : null)}>
       <DialogContent
         className={cn(
-          "sm:max-w-lg bg-[#0D111A] border-border text-foreground shadow-2xl",
+          "sm:max-w-lg bg-[#0D111A] border-border text-foreground shadow-2xl max-h-[88vh] flex flex-col p-0 overflow-hidden",
           isInitialOnboarding && "[&>button]:hidden"
         )}
       >
-        <DialogHeader className="text-left space-y-1.5">
+        <DialogHeader className="text-left space-y-1.5 p-5 pb-3 border-b border-border/70 shrink-0">
           <div className="flex items-center space-x-2.5">
             <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/20 border border-primary/50 text-primary">
               <Globe className="w-5 h-5" />
@@ -119,7 +119,7 @@ export const ServerListModal: React.FC<ServerListModalProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
+        <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {/* Option 1: 1-Click Official Download */}
           <div className="p-4 rounded-xl bg-[#121824] border border-border/80 space-y-3.5">
             <div className="flex items-start justify-between">
@@ -268,8 +268,8 @@ export const ServerListModal: React.FC<ServerListModalProps> = ({
         </div>
 
         {!isInitialOnboarding && (
-          <div className="flex justify-end pt-2">
-            <Button variant="ghost" size="sm" onClick={onClose} className="text-xs">
+          <div className="p-4 pt-3 border-t border-border/70 bg-[#090C14] shrink-0 flex justify-end">
+            <Button variant="ghost" size="sm" onClick={onClose} className="text-sm">
               Close
             </Button>
           </div>

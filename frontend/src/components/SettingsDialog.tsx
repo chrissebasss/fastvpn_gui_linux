@@ -80,8 +80,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg bg-[#0D111A] border-border text-foreground">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-lg bg-[#0D111A] border-border text-foreground max-h-[88vh] flex flex-col p-0 overflow-hidden">
+        <DialogHeader className="p-5 pb-3 border-b border-border/70 shrink-0">
           <DialogTitle className="text-lg font-bold text-foreground">
             FastVPN Settings
           </DialogTitle>
@@ -90,46 +90,47 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSave} className="space-y-4 py-2">
-          {/* Credentials */}
-          <div className="space-y-3.5">
-            <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-slate-200">
-                FastVPN Username / Email
-              </label>
-              <Input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="vpn username"
-                className="bg-[#121824] border-border text-sm h-10 px-3"
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-sm font-semibold text-slate-200">
-                FastVPN Password
-              </label>
-              <div className="relative">
+        <form onSubmit={handleSave} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            {/* Credentials */}
+            <div className="space-y-3.5">
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-200">
+                  FastVPN Username / Email
+                </label>
                 <Input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="bg-[#121824] border-border pr-10 text-sm h-10 px-3"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="vpn username"
+                  className="bg-[#121824] border-border text-sm h-10 px-3"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-200">
+                  FastVPN Password
+                </label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="bg-[#121824] border-border pr-10 text-sm h-10 px-3"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Server Profiles & Protocol Section */}
           <div className="p-3.5 rounded-lg bg-[#111724] border border-border/80 space-y-3">
@@ -334,43 +335,44 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
               </Button>
             </div>
           </div>
+        </div>
 
-          <DialogFooter className="pt-3 flex items-center justify-between sm:justify-between w-full">
+        <DialogFooter className="p-4 pt-3 border-t border-border/70 bg-[#0A0D15] shrink-0 flex items-center justify-between sm:justify-between w-full">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => api.openDevTools()}
+            className="text-sm text-muted-foreground hover:text-foreground flex items-center space-x-2 h-9 px-2.5"
+            title="Open Chrome/WebKit DevTools console"
+          >
+            <Terminal className="w-4 h-4" />
+            <span>DevTools (F12)</span>
+          </Button>
+
+          <div className="flex items-center space-x-2.5">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="sm"
-              onClick={() => api.openDevTools()}
-              className="text-sm text-muted-foreground hover:text-foreground flex items-center space-x-2 h-9 px-2.5"
-              title="Open Chrome/WebKit DevTools console"
+              onClick={onClose}
+              className="text-sm h-9 px-4"
             >
-              <Terminal className="w-4 h-4" />
-              <span>DevTools (F12)</span>
+              Cancel
             </Button>
-
-            <div className="flex items-center space-x-2.5">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={onClose}
-                className="text-sm h-9 px-4"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                size="sm"
-                disabled={isSaving}
-                className="text-sm h-9 px-4 font-medium"
-              >
-                {isSaving ? "Saving..." : "Save Credentials"}
-              </Button>
-            </div>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
+            <Button
+              type="submit"
+              size="sm"
+              disabled={isSaving}
+              className="text-sm h-9 px-4 font-medium"
+            >
+              {isSaving ? "Saving..." : "Save Credentials"}
+            </Button>
+          </div>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
+);
 };
 

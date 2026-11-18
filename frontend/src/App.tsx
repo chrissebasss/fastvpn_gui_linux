@@ -268,7 +268,12 @@ export default function App() {
   };
 
   const isFavorite = Boolean(
-    selectedProfile && config?.favorites?.includes(selectedProfile.id)
+    selectedProfile &&
+      config?.favorites?.some(
+        (f) =>
+          f === selectedProfile.id ||
+          f.replace(/-(UDP|TCP)$/i, "") === selectedProfile.id.replace(/-(UDP|TCP)$/i, "")
+      )
   );
 
   return (
