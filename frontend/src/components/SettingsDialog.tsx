@@ -10,10 +10,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, EyeOff, ShieldCheck, ShieldAlert, Copy, Check, Terminal, Globe, RefreshCw, FolderOpen, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck, ShieldAlert, Copy, Check, Terminal, Globe, RefreshCw, FolderOpen, AlertCircle, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { api } from "@/services/api";
-import { ServerListInfo } from "@/types/vpn";
+import { ServerListInfo, UpdateInfo } from "@/types/vpn";
+import { APP_VERSION } from "@/version";
 
 interface SettingsDialogProps {
   isOpen: boolean;
@@ -22,6 +23,9 @@ interface SettingsDialogProps {
   initialPassword?: string;
   hasPrivileges: boolean;
   serverListInfo?: ServerListInfo | null;
+  updateInfo?: UpdateInfo | null;
+  onOpenUpdateDialog?: () => void;
+  onUpdateInfoChange?: (info: UpdateInfo) => void;
   onSave: (username: string, password: string) => Promise<void>;
   onRequestGrantPrivileges?: () => Promise<void>;
   onDownloadServerLists?: () => Promise<void>;
@@ -35,6 +39,9 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   initialPassword = "",
   hasPrivileges,
   serverListInfo,
+  updateInfo,
+  onOpenUpdateDialog,
+  onUpdateInfoChange,
   onSave,
   onRequestGrantPrivileges,
   onDownloadServerLists,
@@ -46,6 +53,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [isSaving, setIsSaving] = React.useState(false);
   const [isGranting, setIsGranting] = React.useState(false);
   const [isUpdatingLists, setIsUpdatingLists] = React.useState(false);
+  const [isCheckingUpdates, setIsCheckingUpdates] = React.useState(false);
+  const [updateCheckMsg, setUpdateCheckMsg] = React.useState<string | null>(null);
   const [updateFeedback, setUpdateFeedback] = React.useState<"idle" | "success" | "error">("idle");
   const [copiedCmd, setCopiedCmd] = React.useState(false);
   const [setupCmd, setSetupCmd] = React.useState("sudo bash scripts/setup-privileges.sh");
@@ -80,6 +89,24 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     navigator.clipboard.writeText(setupCmd);
     setCopiedCmd(true);
     setTimeout(() => setCopiedCmd(false), 2000);
+  };
+
+  const handleCheckForUpdates = async () => {
+    setIsCheckingUpdates(true);
+    setUpdateCheckMsg(null);
+    try {
+      const info = await api.forceCheckForUpdates();
+      if (onUpdateInfoChange) onUpdateInfoChange(info);
+      if (info.has_update) {
+        setUpdateCheckMsg(`Version v${info.latest_version} available!`);
+      } else {
+        setUpdateCheckMsg(`You are running the latest version (v${APP_VERSION}).`);
+      }
+    } catch (err: any) {
+      setUpdateCheckMsg(err?.message || "Failed to check for updates");
+    } finally {
+      setIsCheckingUpdates(false);
+    }
   };
 
   return (
@@ -244,6 +271,61 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 >
                   <FolderOpen className="w-4 h-4 mr-1.5" />
                   <span>Manage</span>
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Application Version & Updates */}
+          <div className="p-3.5 rounded-lg bg-[#111724] border border-border/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span>Application Updates</span>
+              </span>
+              <Badge variant="outline" className="text-xs px-2.5 py-0.5 text-slate-300 border-border font-mono">
+                v{APP_VERSION}
+              </Badge>
+            </div>
+
+            <div className="flex items-center justify-between text-xs sm:text-sm text-slate-300">
+              <span className="text-muted-foreground">Release Channel:</span>
+              <span className="font-medium text-slate-200">GitHub Releases (Stable)</span>
+            </div>
+
+            {updateCheckMsg && (
+              <div className={cn(
+                "text-xs p-2.5 rounded border leading-relaxed",
+                updateInfo?.has_update
+                  ? "bg-amber-950/40 border-amber-500/40 text-amber-300"
+                  : "bg-emerald-950/40 border-emerald-500/40 text-emerald-400"
+              )}>
+                {updateCheckMsg}
+              </div>
+            )}
+
+            <div className="flex items-center space-x-2.5 pt-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isCheckingUpdates}
+                onClick={handleCheckForUpdates}
+                className="text-xs sm:text-sm h-9 border-border hover:bg-card-hover font-medium flex-1"
+              >
+                <RefreshCw className={cn("w-3.5 h-3.5 mr-2", isCheckingUpdates && "animate-spin text-primary")} />
+                <span>{isCheckingUpdates ? "Checking GitHub..." : "Check for Updates"}</span>
+              </Button>
+
+              {updateInfo?.has_update && onOpenUpdateDialog && (
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={onOpenUpdateDialog}
+                  className="bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm h-9 px-3.5 font-semibold space-x-1.5 shadow-sm"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>View v{updateInfo.latest_version}</span>
                 </Button>
               )}
             </div>

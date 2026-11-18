@@ -55,3 +55,13 @@ export interface ConnectionStatus {
   data?: ConnectionStatusData;
 }
 
+export interface UpdateInfo {
+  current_version: string;
+  latest_version: string;
+  has_update: boolean;
+  release_notes: string;
+  release_url: string;
+  published_at: string;
+}
+
+

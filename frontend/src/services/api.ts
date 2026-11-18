@@ -1,4 +1,4 @@
-import { AppConfig, ConnectionStatus, ServerListInfo, VpnProfile } from "@/types/vpn";
+import { AppConfig, ConnectionStatus, ServerListInfo, UpdateInfo, VpnProfile } from "@/types/vpn";
 import { Call, Events, Window } from "@wailsio/runtime";
 
 if (typeof window !== "undefined") {
@@ -200,5 +200,21 @@ export const api = {
     return Events.On("request-exit-confirm", () => {
       callback();
     });
+  },
+
+  async checkForUpdates(): Promise<UpdateInfo> {
+    return callBackend<UpdateInfo>("CheckForUpdates");
+  },
+
+  async forceCheckForUpdates(): Promise<UpdateInfo> {
+    return callBackend<UpdateInfo>("ForceCheckForUpdates");
+  },
+
+  openExternalUrl(url: string): void {
+    if ((window as any).wails?.Browser?.OpenURL) {
+      (window as any).wails.Browser.OpenURL(url);
+    } else {
+      window.open(url, "_blank");
+    }
   },
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppConfig, ConnectionStatus, VpnProfile } from "@/types/vpn";
+import { AppConfig, ConnectionStatus, UpdateInfo, VpnProfile } from "@/types/vpn";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,7 @@ import {
   Power,
   RotateCw,
   Download,
+  Sparkles,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -30,6 +31,8 @@ interface SidebarProps {
   onOpenLogs: () => void;
   onOpenSettings: () => void;
   onOpenServerListModal?: () => void;
+  updateInfo?: UpdateInfo | null;
+  onOpenUpdateDialog?: () => void;
   onQuit: () => void;
 }
 
@@ -47,6 +50,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenLogs,
   onOpenSettings,
   onOpenServerListModal,
+  updateInfo,
+  onOpenUpdateDialog,
   onQuit,
 }) => {
   const [search, setSearch] = React.useState("");
@@ -104,6 +109,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             Fast<span className="text-primary">VPN</span>
           </span>
           <span className="text-xs text-muted-foreground font-mono">v{APP_VERSION}</span>
+          {updateInfo?.has_update && onOpenUpdateDialog && (
+            <button
+              type="button"
+              onClick={onOpenUpdateDialog}
+              className="flex items-center space-x-1 px-1.5 py-0.5 rounded bg-primary/20 hover:bg-primary/30 border border-primary/40 text-[10px] text-[#FF8A3D] font-medium transition-colors cursor-pointer shadow-sm animate-pulse"
+              title={`Update v${updateInfo.latest_version} available - click to view`}
+            >
+              <Sparkles className="w-2.5 h-2.5 text-[#FF8A3D]" />
+              <span>Update</span>
+            </button>
+          )}
         </div>
 
         {/* Global Status Badge */}

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppConfig, ConnectionStatus, ServerListInfo, VpnProfile } from "@/types/vpn";
+import { AppConfig, ConnectionStatus, ServerListInfo, UpdateInfo, VpnProfile } from "@/types/vpn";
 import { api } from "@/services/api";
 import { Sidebar } from "@/components/Sidebar";
 import { GatewayView } from "@/components/GatewayView";
@@ -7,6 +7,7 @@ import { LogDrawer } from "@/components/LogDrawer";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { ExitConfirmDialog } from "@/components/ExitConfirmDialog";
 import { ServerListModal } from "@/components/ServerListModal";
+import { UpdateDialog } from "@/components/UpdateDialog";
 
 export default function App() {
   const [profiles, setProfiles] = React.useState<VpnProfile[]>([]);
@@ -19,11 +20,13 @@ export default function App() {
   const [publicIp, setPublicIp] = React.useState<string>("Detecting...");
   const [isIpLoading, setIsIpLoading] = React.useState<boolean>(false);
   const [hasPrivileges, setHasPrivileges] = React.useState<boolean>(false);
+  const [updateInfo, setUpdateInfo] = React.useState<UpdateInfo | null>(null);
 
   // Dialog states
   const [isLogsOpen, setIsLogsOpen] = React.useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = React.useState<boolean>(false);
   const [isServerListModalOpen, setIsServerListModalOpen] = React.useState<boolean>(false);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = React.useState<boolean>(false);
   const [isExitConfirmOpen, setIsExitConfirmOpen] = React.useState<boolean>(false);
   const [dismissedPrivilegeBanner, setDismissedPrivilegeBanner] = React.useState<boolean>(false);
 
@@ -70,6 +73,15 @@ export default function App() {
             console.warn("[FastVPN Frontend] Startup privilege request:", e);
           });
         }
+
+        // Silent background update check
+        api.checkForUpdates()
+          .then((info) => {
+            if (mounted && info) {
+              setUpdateInfo(info);
+            }
+          })
+          .catch(() => {});
 
         // Select initial profile
         if (loadedProfiles.length > 0) {
@@ -293,6 +305,8 @@ export default function App() {
         onOpenLogs={() => setIsLogsOpen(!isLogsOpen)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenServerListModal={() => setIsServerListModalOpen(true)}
+        updateInfo={updateInfo}
+        onOpenUpdateDialog={() => setIsUpdateDialogOpen(true)}
         onQuit={handleQuitRequest}
       />
 
@@ -347,6 +361,12 @@ export default function App() {
         initialPassword={config?.password || ""}
         hasPrivileges={hasPrivileges}
         serverListInfo={serverListInfo}
+        updateInfo={updateInfo}
+        onOpenUpdateDialog={() => {
+          setIsSettingsOpen(false);
+          setIsUpdateDialogOpen(true);
+        }}
+        onUpdateInfoChange={(info) => setUpdateInfo(info)}
         onSave={handleSaveCredentials}
         onRequestGrantPrivileges={handleGrantPrivileges}
         onDownloadServerLists={handleDownloadServerLists}
@@ -373,6 +393,13 @@ export default function App() {
         publicIp={publicIp}
         onDisconnectAndQuit={() => api.forceExit(true)}
         onKeepAndQuit={() => api.forceExit(false, publicIp)}
+      />
+
+      {/* Update Available Modal */}
+      <UpdateDialog
+        isOpen={isUpdateDialogOpen}
+        onClose={() => setIsUpdateDialogOpen(false)}
+        updateInfo={updateInfo}
       />
     </div>
   );
